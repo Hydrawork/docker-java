@@ -1,5 +1,5 @@
-# AlpineLinux with Oracle Java
-FROM hydrawork/alpine:3.4
+# AlpineLinux with Oracle Java 7
+FROM hydrawork/alpine:3.6
 
 MAINTAINER Alex Huang <alex@hydra.work>
 
