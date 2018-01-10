@@ -25,7 +25,6 @@ RUN apk add --update --no-cache bash ca-certificates curl && \
     tar -C /opt -xf /tmp/java.tar && \
     mv /opt/jdk* /opt/jdk && \
     find /opt/jdk/ -maxdepth 1 -mindepth 1 | grep -v jre | grep -v include | xargs rm -rf && \
-    cd /opt/jdk/ && ln -s ./jre/bin ./bin && \
     # Install jce
     curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/jce_policy-${JAVA_VERSION_MAJOR}.zip \
         http://download.oracle.com/otn-pub/java/jce/${JAVA_VERSION_MAJOR}/jce_policy-${JAVA_VERSION_MAJOR}.zip && \
