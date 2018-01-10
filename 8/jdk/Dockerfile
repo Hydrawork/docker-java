@@ -7,15 +7,16 @@ MAINTAINER Alex Huang <alex@hydra.work>
 ENV JAVA_HOME=/opt/jdk \
     PATH=${PATH}:/opt/jdk/bin \
     JAVA_VERSION_MAJOR=8 \
-    JAVA_VERSION_MINOR=102 \
-    JAVA_VERSION_BUILD=14 \
+    JAVA_VERSION_MINOR=152 \
+    JAVA_VERSION_BUILD=16 \
+    JAVA_VERSION_SOLT=aa0333dd3019491ca4f6ddbe78cdb6d0 \
     JAVA_PACKAGE=jdk
 
 # do all in one step
 RUN apk add --update --no-cache bash ca-certificates curl && \
     mkdir /opt && \
     curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/java.tar.gz \
-      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
+      http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_VERSION_SOLT}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
     JAVA_PACKAGE_SHA256=$(curl -sSL https://www.oracle.com/webfolder/s/digest/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}checksum.html | grep -E "${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64\.tar\.gz" | grep -Eo '(sha256: )[^<]+' | cut -d: -f2 | xargs) && \
     echo "${JAVA_PACKAGE_SHA256}  /tmp/java.tar.gz" > /tmp/java.tar.gz.sha256 && \
     sha256sum -c /tmp/java.tar.gz.sha256 && \
