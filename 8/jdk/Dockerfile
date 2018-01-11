@@ -4,8 +4,8 @@ FROM hydrawork/alpine:3.6
 MAINTAINER Alex Huang <alex@hydra.work>
 
 # Java Version and other ENV
-ENV JAVA_HOME=/opt/jdk \
-    PATH=${PATH}:/opt/jdk/bin \
+ENV JAVA_HOME=/opt/java \
+    PATH=${PATH}:$JAVA_HOME/bin \
     JAVA_VERSION_MAJOR=8 \
     JAVA_VERSION_MINOR=152 \
     JAVA_VERSION_BUILD=16 \
@@ -23,48 +23,53 @@ RUN apk add --update --no-cache bash ca-certificates curl && \
     # Install jdk
     gunzip /tmp/java.tar.gz && \
     tar -C /opt -xf /tmp/java.tar && \
-    mv /opt/jdk* /opt/jdk && \
-    find /opt/jdk/ -maxdepth 1 -mindepth 1 | grep -v jre | grep -v include | xargs rm -rf && \
+    mv /opt/jdk* $JAVA_HOME && \
+    find $JAVA_HOME/ -maxdepth 1 -mindepth 1 | grep -v jre | grep -v include | grep -v bin | grep -v lib | xargs rm -rf && \
     # Install jce
     curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" -o /tmp/jce_policy-${JAVA_VERSION_MAJOR}.zip \
         http://download.oracle.com/otn-pub/java/jce/${JAVA_VERSION_MAJOR}/jce_policy-${JAVA_VERSION_MAJOR}.zip && \
     cd /tmp && unzip /tmp/jce_policy-${JAVA_VERSION_MAJOR}.zip && \
-    cp -v /tmp/UnlimitedJCEPolicy*/*.jar /opt/jdk/jre/lib/security && \
+    cp -v /tmp/UnlimitedJCEPolicy*/*.jar $JAVA_HOME/jre/lib/security && \
     sed -i s/#networkaddress.cache.ttl=-1/networkaddress.cache.ttl=10/ $JAVA_HOME/jre/lib/security/java.security && \
     sed -i /^securerandom\.source\=file\:/s@/dev/urandom@/dev/./urandom@ $JAVA_HOME/jre/lib/security/java.security && \
     # Reduce package and clean cache
     apk del curl && \
-    rm -rf /opt/jdk/*src.zip \
-           /opt/jdk/lib/missioncontrol \
-           /opt/jdk/lib/visualvm \
-           /opt/jdk/lib/*javafx* \
-           /opt/jdk/jre/plugin \
-           /opt/jdk/jre/bin/javaws \
-           /opt/jdk/jre/bin/jjs \
-           /opt/jdk/jre/bin/orbd \
-           /opt/jdk/jre/bin/pack200 \
-           /opt/jdk/jre/bin/policytool \
-           /opt/jdk/jre/bin/rmid \
-           /opt/jdk/jre/bin/rmiregistry \
-           /opt/jdk/jre/bin/servertool \
-           /opt/jdk/jre/bin/tnameserv \
-           /opt/jdk/jre/bin/unpack200 \
-           /opt/jdk/jre/lib/javaws.jar \
-           /opt/jdk/jre/lib/deploy* \
-           /opt/jdk/jre/lib/desktop \
-           /opt/jdk/jre/lib/*javafx* \
-           /opt/jdk/jre/lib/*jfx* \
-           /opt/jdk/jre/lib/amd64/libdecora_sse.so \
-           /opt/jdk/jre/lib/amd64/libprism_*.so \
-           /opt/jdk/jre/lib/amd64/libfxplugins.so \
-           /opt/jdk/jre/lib/amd64/libglass.so \
-           /opt/jdk/jre/lib/amd64/libgstreamer-lite.so \
-           /opt/jdk/jre/lib/amd64/libjavafx*.so \
-           /opt/jdk/jre/lib/amd64/libjfx*.so \
-           /opt/jdk/jre/lib/ext/jfxrt.jar \
-           /opt/jdk/jre/lib/ext/nashorn.jar \
-           /opt/jdk/jre/lib/oblique-fonts \
-           /opt/jdk/jre/lib/plugin.jar \
+    rm -rf $JAVA_HOME/*src.zip \
+           $JAVA_HOME/bin/appletviewer \
+           $JAVA_HOME/bin/extcheck \
+           $JAVA_HOME/bin/pack200 \
+           $JAVA_HOME/bin/unpack200 \
+           $JAVA_HOME/bin/ws* \
+           $JAVA_HOME/lib/missioncontrol \
+           $JAVA_HOME/lib/visualvm \
+           $JAVA_HOME/lib/*javafx* \
+           $JAVA_HOME/jre/plugin \
+           $JAVA_HOME/jre/bin/javaws \
+           $JAVA_HOME/jre/bin/jjs \
+           $JAVA_HOME/jre/bin/orbd \
+           $JAVA_HOME/jre/bin/pack200 \
+           $JAVA_HOME/jre/bin/policytool \
+           $JAVA_HOME/jre/bin/rmid \
+           $JAVA_HOME/jre/bin/rmiregistry \
+           $JAVA_HOME/jre/bin/servertool \
+           $JAVA_HOME/jre/bin/tnameserv \
+           $JAVA_HOME/jre/bin/unpack200 \
+           $JAVA_HOME/jre/lib/javaws.jar \
+           $JAVA_HOME/jre/lib/deploy* \
+           $JAVA_HOME/jre/lib/desktop \
+           $JAVA_HOME/jre/lib/*javafx* \
+           $JAVA_HOME/jre/lib/*jfx* \
+           $JAVA_HOME/jre/lib/amd64/libdecora_sse.so \
+           $JAVA_HOME/jre/lib/amd64/libprism_*.so \
+           $JAVA_HOME/jre/lib/amd64/libfxplugins.so \
+           $JAVA_HOME/jre/lib/amd64/libglass.so \
+           $JAVA_HOME/jre/lib/amd64/libgstreamer-lite.so \
+           $JAVA_HOME/jre/lib/amd64/libjavafx*.so \
+           $JAVA_HOME/jre/lib/amd64/libjfx*.so \
+           $JAVA_HOME/jre/lib/ext/jfxrt.jar \
+           $JAVA_HOME/jre/lib/ext/nashorn.jar \
+           $JAVA_HOME/jre/lib/oblique-fonts \
+           $JAVA_HOME/jre/lib/plugin.jar \
            /tmp/* /var/cache/apk/* && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
