@@ -5,7 +5,7 @@ MAINTAINER Alex Huang <alex@hydra.work>
 
 # Java Version and other ENV
 ENV JAVA_HOME=/opt/java \
-    PATH=${PATH}:$JAVA_HOME/bin \
+    PATH=${PATH}:/opt/java/bin \
     JAVA_VERSION_MAJOR=8 \
     JAVA_VERSION_MINOR=152 \
     JAVA_VERSION_BUILD=16 \
